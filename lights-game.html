@@ -1,0 +1,104 @@
+<style>
+    .box {
+        display: inline-block;
+        background-color: grey;
+        border: solid black 2px;
+        height: 50px;
+        width: 50px;
+        box-sizing: border-box;
+    }
+
+    .rowDiv {
+        margin-bottom: 5px;
+    }
+
+    .box.active {
+        background-color: skyblue;
+    }
+</style>
+<html>
+<div class="screen"></div>
+
+</html>
+<script>
+
+    const createRowDiv = (boxArray) => {
+        const div = document.createElement("div");
+        div.classList.add("rowDiv");
+        boxArray.forEach((e) => {
+            div.append(e.element);
+        })
+        main.append(div);
+    }
+
+    const create2dBoxes = (row, column, i = 0, j = 0, result = [], inner = []) => {
+        if (i >= row) {
+            return result;
+        }
+        if (j < column) {
+            inner.push(new Box(i, j));
+            return create2dBoxes(row, column, i, j + 1, result, inner);
+        }
+        result.push(inner);
+        createRowDiv(inner);
+        return create2dBoxes(row, column, i + 1, j = 0, result, []);
+    }
+
+    const main = document.querySelector(".screen");
+    let gameSize = 2;
+    let boxes;
+    const createGame = () => {
+        boxes = create2dBoxes(gameSize, gameSize);
+        const i = Math.floor(Math.random() * gameSize);
+        const j = Math.floor(Math.random() * gameSize);
+        boxes[i][j].element.classList.add('active');
+    }
+
+    createGame();
+
+    const lightsOff = () => {
+        let dim = true;
+        boxes.forEach((boxRow) => {
+            boxRow.forEach((box) => {
+                if (box.element.classList.contains('active')) {
+                    dim = false;
+                }
+            })
+        })
+        return dim;
+    }
+
+    function Box(row, column) {
+        this.row = row;
+        this.column = column;
+        this.element = document.createElement("div");
+        this.element.classList.add("box");
+
+        this.element.addEventListener("click", () => {
+            if (this.element.classList.contains('active')) {
+                this.element.classList.toggle('active');
+                toggleBox(this.row - 1, this.column); //top
+                toggleBox(this.row + 1, this.column); //bottom
+                toggleBox(this.row, this.column - 1); //left
+                toggleBox(this.row, this.column + 1); //right
+            }
+
+            if (lightsOff()) {
+                gameSize = parseInt(prompt("You won!Play again with different size?0 to stop playing"));
+                if (gameSize === 0) {
+                    return;
+                }
+                main.innerHTML = "";
+                createGame();
+            }
+        })
+
+        const toggleBox = (row, column) => {
+            if (row >= 0 && row < gameSize && column >= 0 && column < gameSize) {
+                boxes[row][column].element.classList.toggle('active');
+            }
+        }
+
+    }
+
+</script>
