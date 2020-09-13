@@ -1,0 +1,185 @@
+<style>
+    .container {
+        width: 22%;
+        /* margin-right: 30px; */
+        margin-left: 30px;
+        margin-top: 30px;
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    textarea {
+        width: 221px;
+    }
+
+    .headerClass {
+        text-align: center;
+        box-sizing: border-box;
+        color: white;
+        height: 30px;
+        padding: 6px;
+    }
+
+    .inputClass {
+        display: flex;
+        width: 100%;
+    }
+
+    .itemClass {
+        background-color: grey;
+        margin-bottom: 2px;
+        height: 30px;
+    }
+
+    .spanInnerText {
+        text-align: center;
+    }
+
+    .leftArrow {
+        margin-right: 5px;
+        float: left;
+        cursor: pointer
+    }
+
+    .rightArrow {
+        float: right;
+        cursor: pointer;
+    }
+    /* .UNDO{
+        /* background-color: grey;
+        color:honeydew;
+        /* width: 20px; */
+        /* height: 20px;
+        margin-bottom: 20px; */  */
+</style>
+<html>
+<div class="screen"></div>
+
+
+<!-- <div class="container">
+    <div class="header">To-Do</div>
+    <div class="left-arrow"></div>
+    <div class="right arrow"></div>
+    <div class="input">
+        <textarea rows="3"></textarea>
+        <button class="submit">Submit</button>
+    </div>
+</div> -->
+<!-- <button class="UNDO">UNDO</button> -->
+</html>
+<script>
+    const headings = [
+        {
+            name: 'To-Do',
+            color: '#35235D'
+        },
+        {
+            name: 'Doing',
+            color: '#CB2402'
+        },
+        {
+            name: 'Done',
+            color: '#4C49A2'
+        },
+        {
+            name: 'Approved',
+            color: '#A31A48'
+        }
+    ]
+    const screen = document.querySelector(".screen");
+
+    function Board(position) {
+        const heading = headings[position];
+        this.element = document.createElement("div");
+        this.element.classList.add("container");
+        const header = document.createElement("div");
+        header.classList.add("headerClass");
+        this.element.append(header)
+        header.innerText = `${heading.name}`;
+        header.style.backgroundColor = `${heading.color}`
+        const itemList = document.createElement("div");
+        itemList.classList.add("itemLists");
+        this.element.append(itemList);
+        const input = document.createElement("div");
+        input.classList.add("inputClass");
+        const textarea = document.createElement("textarea");
+        const att = document.createAttribute("rows")
+        att.value = "5";
+        textarea.setAttributeNode(att);
+        input.append(textarea);
+        const button = document.createElement("button")
+        button.innerText = `Submit`;
+        input.append(button);
+        this.element.append(input);
+        screen.append(this.element);
+        // const undo = document.querySelector("undo");
+        // undo.innerHTML = <button class="undo">UNDO</button>;
+        let result = [];
+        const locallyStored = localStorage.getItem(heading.name);
+        this.add = (value) => {
+            const textIndex = result.push(value);
+            arrows(value, textIndex);
+            localStorage.setItem(heading.name, result);
+        }
+
+        const arrows = (text, textIndex) => {
+            const item = document.createElement("div");
+            item.classList.add("itemClass");
+            const left = document.createElement("span");
+            left.classList.add("leftArrow");
+            left.innerText = "<";
+            item.append(left);
+            const spanInner = document.createElement("span");
+            spanInner.classList.add("spanInnerText");
+            spanInner.innerText = text;
+            item.append(spanInner);
+            const right = document.createElement("span");
+            right.classList.add("rightArrow")
+            right.innerText = ">";
+            item.append(right);
+            itemList.append(item);
+            left.onclick = () => {
+                boxes[position - 1].add(text);
+                item.remove()
+                result.splice(textIndex, 1);
+                localStorage.setItem(heading.name, result);
+            }
+            right.onclick = () => {
+                boxes[position + 1].add(text);
+                item.remove();
+
+                result.splice(textIndex, 1);
+                localStorage.setItem(heading.name, result);
+            }
+            spanInner.addEventListener("click", () => {
+                let r = confirm(`Are you sure you want to remove ${text}`)
+                if (r) {
+                    item.remove();
+                    result.splice(textIndex, 1);
+                    localStorage.setItem(heading.name, result);
+                }
+            })
+        }
+
+        if (locallyStored) {
+            result = locallyStored.split(",");
+            result.map((e, textIndex) => {
+                arrows(e, textIndex);
+            })
+        }
+        button.onclick = () => {
+            this.add(textarea.value)
+            textarea.value = '';
+        }
+    }
+    const boardCount = (num, i = 0, result = []) => {
+        if (i >= num) {
+            return result;
+        }
+        result.push(new Board(i));
+        return boardCount(num, i + 1, result)
+    }
+    const boxes = boardCount(4);
+
+
+</script>
