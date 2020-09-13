@@ -1,0 +1,58 @@
+<style>
+    .container {
+        display: block;
+        text-align: center;
+        cursor: none;
+    }
+
+    .big {
+        position: absolute;
+        z-index: 1;
+    }
+
+    .scopeContainer {
+        position: fixed;
+        pointer-events: none;
+        height: 200px;
+        width: 200px;
+        overflow: hidden;
+        border-radius: 50%;
+        display: none;
+    }
+
+    .scope {
+        z-index: 10;
+        position: absolute;
+    }
+</style>
+<html>
+<div class="container">
+    <img class="small" src="https://c0d3.com/challenges/assets/fair/small.jpg">
+</div>
+<div class="scopeContainer">
+    <img class="scope" src="https://c0d3.com/challenges/assets/fair/scope.png">
+    <img src="https://c0d3.com/challenges/assets/fair/big.jpg" class="big">
+</div>
+
+</html>
+<script>
+    const small = document.querySelector(".small");
+    const big = document.querySelector(".big");
+    const scopeContainer = document.querySelector(".scopeContainer");
+    small.addEventListener("mousemove", (e) => {
+        const x = e.clientX;
+        const y = e.clientY;
+        scopeContainer.style.top = `${y - 100}px`
+        scopeContainer.style.left = `${x - 100}px`
+        scopeContainer.style.display = "block";
+        const ratio = (big.width / small.width)
+        const bigValueX = (e.clientX - small.offsetLeft) * ratio;
+        const bigValueY = (e.clientY - small.offsetTop) * ratio;
+
+        big.style.top = `${-bigValueY + 100}px`;
+        big.style.left = `${-bigValueX + 100}px`;
+    })
+    small.addEventListener("mouseleave", () => {
+        scopeContainer.style.display = "none";
+    })
+</script>
