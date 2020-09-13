@@ -1,0 +1,94 @@
+<style>
+    .watch {
+        position: fixed;
+        top: 10px;
+        bottom: 10px;
+        width: 600px;
+        height: 800px;
+        background: url(https://c0d3.com/challenges/assets/watch.jpg);
+    }
+
+    .content {
+        position: absolute;
+        top: 210px;
+        left: 131px;
+        width: 378px;
+        height: 374px;
+        background-color: white;
+        border-radius: 50%;
+        overflow: hidden;
+    }
+
+    .timing {
+        position: absolute;
+        top: 50%;
+        height: 100%;
+        width: 100%;
+        background-color: white;
+        cursor: pointer;
+        transition: top 0.5s linear;
+    }
+
+    .timing.active {
+        top: 0;
+    }
+
+    .time {
+        color: black;
+        text-align: center;
+        font-size: 5em;
+        margin-top: 30px;
+
+    }
+
+    .date {
+        color: black;
+        text-align: center;
+    }
+</style>
+<html>
+<div class="watch">
+    <div class="content">
+        <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2689.8711851582198!2d-122.18094518462524!3d47.60919437918479!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x54906c66ffcf2bb7%3A0xf3a991ee744c3f03!2sBellevue%20Botanical%20Garden!5e0!3m2!1sen!2sus!4v1597104123131!5m2!1sen!2sus"
+            width="400" height="185" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false"
+            tabindex="0">
+        </iframe>
+        <div class="timing">
+            <h2 class="time">Time</h2>
+            <hr>
+            <h2 class="date">Date</h2>
+        </div>
+    </div>
+
+</div>
+
+
+</html>
+<script>
+    const timing = document.querySelector(".timing")
+    const time = document.querySelector(".time");
+    const day = document.querySelector(".date")
+    const date = new Date();
+    const week = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const month = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"];
+    let d = date.getMinutes()
+    if (d < 10) {
+        minutes = `0${minutes}`
+    }
+    if (date.getHours() > 12) {
+        time.innerText = `${date.getHours() - 12}:${d}`
+    }
+    else {
+        time.innerText = `${date.getHours()}:${d}`
+    }
+    day.innerText = ` ${week[date.getDay()]} 
+     ${month[date.getMonth()]} ${date.getDate()},${date.getFullYear()} `
+    timing.addEventListener('click', () => {
+        timing.classList.toggle('active')
+    })
+
+
+
+</script>
